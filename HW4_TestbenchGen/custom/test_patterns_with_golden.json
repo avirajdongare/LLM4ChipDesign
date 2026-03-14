@@ -1,0 +1,177 @@
+[
+  {
+    "req": 0,
+    "expected_outputs": {
+      "code": 0,
+      "valid": 0
+    }
+  },
+  {
+    "req": 1,
+    "expected_outputs": {
+      "code": 0,
+      "valid": 1
+    }
+  },
+  {
+    "req": 2,
+    "expected_outputs": {
+      "code": 1,
+      "valid": 1
+    }
+  },
+  {
+    "req": 4,
+    "expected_outputs": {
+      "code": 2,
+      "valid": 1
+    }
+  },
+  {
+    "req": 8,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 11,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 7,
+    "expected_outputs": {
+      "code": 2,
+      "valid": 1
+    }
+  },
+  {
+    "req": 12,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 5,
+    "expected_outputs": {
+      "code": 2,
+      "valid": 1
+    }
+  },
+  {
+    "req": 10,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 14,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 15,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 3,
+    "expected_outputs": {
+      "code": 1,
+      "valid": 1
+    }
+  },
+  {
+    "req": 9,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 6,
+    "expected_outputs": {
+      "code": 2,
+      "valid": 1
+    }
+  },
+  {
+    "req": 13,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 15,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 0,
+    "expected_outputs": {
+      "code": 0,
+      "valid": 0
+    }
+  },
+  {
+    "req": 15,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 0,
+    "expected_outputs": {
+      "code": 0,
+      "valid": 0
+    }
+  },
+  {
+    "req": 10,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 5,
+    "expected_outputs": {
+      "code": 2,
+      "valid": 1
+    }
+  },
+  {
+    "req": 12,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  },
+  {
+    "req": 3,
+    "expected_outputs": {
+      "code": 1,
+      "valid": 1
+    }
+  },
+  {
+    "req": 9,
+    "expected_outputs": {
+      "code": 3,
+      "valid": 1
+    }
+  }
+]
