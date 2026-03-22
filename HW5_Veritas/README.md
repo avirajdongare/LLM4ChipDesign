@@ -1,4 +1,4 @@
-# 🧠 Veritas: SAT-Based Hardware Verification Pipeline  
+# 🧠 Veritas: Hardware Verification Pipeline  
 **Course:** LLM4Chip Design  
 **Author:** Aviraj (aud211)
 
