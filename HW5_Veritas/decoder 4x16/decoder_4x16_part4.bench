@@ -1,0 +1,73 @@
+INPUT(A0)
+INPUT(A1)
+INPUT(A2)
+INPUT(A3)
+OUTPUT(Y0)
+OUTPUT(Y1)
+OUTPUT(Y2)
+OUTPUT(Y3)
+OUTPUT(Y4)
+OUTPUT(Y5)
+OUTPUT(Y6)
+OUTPUT(Y7)
+OUTPUT(Y8)
+OUTPUT(Y9)
+OUTPUT(Y10)
+OUTPUT(Y11)
+OUTPUT(Y12)
+OUTPUT(Y13)
+OUTPUT(Y14)
+OUTPUT(Y15)
+
+n_A0 = NOT(A0)
+n_A1 = NOT(A1)
+n_A2 = NOT(A2)
+n_A3 = NOT(A3)
+
+p_Y0_0 = AND(n_A0, n_A1, n_A2, n_A3)
+Y0 = BUF(p_Y0_0)
+
+p_Y1_0 = AND(A0, n_A1, n_A2, n_A3)
+Y1 = BUF(p_Y1_0)
+
+p_Y2_0 = AND(n_A0, A1, n_A2, n_A3)
+Y2 = BUF(p_Y2_0)
+
+p_Y3_0 = AND(A0, A1, n_A2, n_A3)
+Y3 = BUF(p_Y3_0)
+
+p_Y4_0 = AND(n_A0, n_A1, A2, n_A3)
+Y4 = BUF(p_Y4_0)
+
+p_Y5_0 = AND(A0, n_A1, A2, n_A3)
+Y5 = BUF(p_Y5_0)
+
+p_Y6_0 = AND(n_A0, A1, A2, n_A3)
+Y6 = BUF(p_Y6_0)
+
+p_Y7_0 = AND(A0, A1, A2, n_A3)
+Y7 = BUF(p_Y7_0)
+
+p_Y8_0 = AND(n_A0, n_A1, n_A2, A3)
+Y8 = BUF(p_Y8_0)
+
+p_Y9_0 = AND(A0, n_A1, n_A2, A3)
+Y9 = BUF(p_Y9_0)
+
+p_Y10_0 = AND(n_A0, A1, n_A2, A3)
+Y10 = BUF(p_Y10_0)
+
+p_Y11_0 = AND(A0, A1, n_A2, A3)
+Y11 = BUF(p_Y11_0)
+
+p_Y12_0 = AND(n_A0, n_A1, A2, A3)
+Y12 = BUF(p_Y12_0)
+
+p_Y13_0 = AND(A0, n_A1, A2, A3)
+Y13 = BUF(p_Y13_0)
+
+p_Y14_0 = AND(n_A0, A1, A2, A3)
+Y14 = BUF(p_Y14_0)
+
+p_Y15_0 = AND(A0, A1, A2, A3)
+Y15 = BUF(p_Y15_0)
