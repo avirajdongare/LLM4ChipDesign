@@ -1,6 +1,6 @@
 # 🧠 Veritas: Hardware Verification Pipeline  
 **Course:** LLM4Chip Design  
-**Author:** Aviraj (aud211)
+**Author:** Aviraj Dongare
 
 ---
 
