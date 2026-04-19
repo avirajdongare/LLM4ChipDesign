@@ -1,0 +1,5 @@
+Multi-Start Optimization Comparison
+=================================================================
+Mode A (Area, start=RCA8): Cells=36, Area=44.156 um²
+Mode B (Delay, start=RCA8): Cells=37, Area=44.954 um²
+Mode C (Balanced, start=RCA8): Cells=30, Area=38.57 um²

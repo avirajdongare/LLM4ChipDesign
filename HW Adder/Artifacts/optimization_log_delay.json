@@ -1,0 +1,100 @@
+{
+  "mode": "delay",
+  "best_ppa": {
+    "area_um2": 44.954,
+    "cell_count": 37,
+    "logic_levels": null
+  },
+  "iterations": [
+    {
+      "iteration": 1,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_1.v"
+    },
+    {
+      "iteration": 2,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_2.v"
+    },
+    {
+      "iteration": 3,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_3.v"
+    },
+    {
+      "iteration": 4,
+      "ppa": {
+        "area_um2": 52.136,
+        "cell_count": 42,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_4.v"
+    },
+    {
+      "iteration": 5,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_5.v"
+    },
+    {
+      "iteration": 6,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_6.v"
+    },
+    {
+      "iteration": 7,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_7.v"
+    },
+    {
+      "iteration": 8,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_8.v"
+    },
+    {
+      "iteration": 9,
+      "ppa": {
+        "area_um2": 54.264,
+        "cell_count": 45,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_9.v"
+    },
+    {
+      "iteration": 10,
+      "ppa": {
+        "area_um2": 44.954,
+        "cell_count": 37,
+        "logic_levels": null
+      },
+      "file": "candidate_delay_10.v"
+    }
+  ]
+}

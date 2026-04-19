@@ -1,0 +1,136 @@
+# Detailed Analysis of 8-bit Carry Lookahead Adder (CLA8)
+
+## (1) Overall Architecture and Purpose
+
+This Verilog code implements an **8-bit Carry Lookahead Adder (CLA)** using structural gate-level modeling. The CLA architecture eliminates the ripple-carry delay by computing all carry bits in parallel using generate (g) and propagate (p) signals. This design achieves O(1) carry computation time (in terms of gate levels) rather than O(n) for ripple-carry adders.
+
+The adder computes: `sum[7:0] = a[7:0] + b[7:0]` with `cout` indicating overflow.
+
+---
+
+## (2) Module Hierarchy and Interfaces
+
+### Top-Level Module: `CLA8`
+| Port | Direction | Width | Description |
+|------|-----------|-------|-------------|
+| `sum` | output | [7:0] | 8-bit sum result |
+| `cout` | output | 1-bit | Carry out (overflow indicator) |
+| `a` | input | [7:0] | First 8-bit operand |
+| `b` | input | [7:0] | Second 8-bit operand |
+
+### Sub-Module: `PGGen` (Propagate-Generate Generator)
+| Port | Direction | Width | Description |
+|------|-----------|-------|-------------|
+| `g` | output | 1-bit | Generate signal: g = a AND b |
+| `p` | output | 1-bit | Propagate signal: p = a XOR b |
+| `a` | input | 1-bit | First bit operand |
+| `b` | input | 1-bit | Second bit operand |
+
+### Internal Wires in CLA8:
+| Wire | Width | Purpose |
+|------|-------|---------|
+| `g` | [7:0] | Generate signals for each bit position |
+| `p` | [7:0] | Propagate signals for each bit position |
+| `c` | [7:0] | Carry signals (c[i] = carry into position i+1) |
+| `e` | [35:0] | Intermediate AND gate outputs for carry computation |
+| `cin` | 1-bit | Carry input (hardwired to 0) |
+
+---
+
+## (3) Signal Flow Step by Step
+
+### Step 1: Carry Input Initialization
+```
+cin ← 0 (via buffer)
+```
+
+### Step 2: Generate and Propagate Computation
+Eight parallel instances of PGGen compute:
+```
+For each bit i (0 to 7):
+  g[i] ← a[i] AND b[i]    (generate: produces carry)
+  p[i] ← a[i] XOR b[i]    (propagate: passes carry through)
+```
+
+### Step 3: Parallel Carry Computation
+All carries c[0] through c[7] are computed simultaneously using the CLA equations:
+```
+c[i] = g[i] + p[i]·g[i-1] + p[i]·p[i-1]·g[i-2] + ... + p[i]·p[i-1]·...·p[1]·p[0]·cin
+```
+
+### Step 4: Sum Computation
+```
+sum[0] ← p[0] XOR cin
+sum[i] ← p[i] XOR c[i-1]  (for i = 1 to 7)
+```
+
+### Step 5: Carry Output
+```
+cout ← c[7]
+```
+
+---
+
+## (4) Every Gate-Level Logic Operation Explicitly
+
+### PGGen Module (instantiated 8 times as array pggen[7:0]):
+```verilog
+and (g, a, b);      // g = a & b
+xor (p, a, b);      // p = a ^ b
+```
+
+### CLA8 Module:
+
+#### Carry Input:
+```verilog
+buf (cin, 0);       // cin = 0
+```
+
+#### PGGen Array Instantiation:
+```verilog
+PGGen pggen[7:0](g[7:0], p[7:0], a[7:0], b[7:0]);
+// Creates 8 instances: pggen[0] through pggen[7]
+// Each computes: g[i] = a[i] & b[i], p[i] = a[i] ^ b[i]
+```
+
+#### Carry c[0] (2 gates):
+```verilog
+and (e[0], cin, p[0]);           // e[0] = cin & p[0]
+or  (c[0], e[0], g[0]);          // c[0] = e[0] | g[0] = g[0] + p[0]·cin
+```
+
+#### Carry c[1] (3 gates):
+```verilog
+and (e[1], cin, p[0], p[1]);     // e[1] = cin & p[0] & p[1]
+and (e[2], g[0], p[1]);          // e[2] = g[0] & p[1]
+or  (c[1], e[1], e[2], g[1]);    // c[1] = g[1] + g[0]·p[1] + cin·p[0]·p[1]
+```
+
+#### Carry c[2] (4 gates):
+```verilog
+and (e[3], cin, p[0], p[1], p[2]);    // e[3] = cin & p[0] & p[1] & p[2]
+and (e[4], g[0], p[1], p[2]);         // e[4] = g[0] & p[1] & p[2]
+and (e[5], g[1], p[2]);               // e[5] = g[1] & p[2]
+or  (c[2], e[3], e[4], e[5], g[2]);   // c[2] = g[2] + g[1]·p[2] + g[0]·p[1]·p[2] + cin·p[0]·p[1]·p[2]
+```
+
+#### Carry c[3] (5 gates):
+```verilog
+and (e[6], cin, p[0], p[1], p[2], p[3]);     // e[6] = cin & p[0] & p[1] & p[2] & p[3]
+and (e[7], g[0], p[1], p[2], p[3]);          // e[7] = g[0] & p[1] & p[2] & p[3]
+and (e[8], g[1], p[2], p[3]);                // e[8] = g[1] & p[2] & p[3]
+and (e[9], g[2], p[3]);                      // e[9] = g[2] & p[3]
+or  (c[3], e[6], e[7], e[8], e[9], g[3]);    // c[3] = g[3] + g[2]·p[3] + g[1]·p[2]·p[3] + g[0]·p[1]·p[2]·p[3] + cin·p[0]·p[1]·p[2]·p[3]
+```
+
+#### Carry c[4] (6 gates):
+```verilog
+and (e[10], cin, p[0], p[1], p[2], p[3], p[4]);
+and (e[11], g[0], p[1], p[2], p[3], p[4]);
+and (e[12], g[1], p[2], p[3], p[4]);
+and (e[13], g[2], p[3], p[4]);
+and (e[14], g[3], p[4]);
+or  (c[4], e[10], e[11], e[12], e[13], e[14], g[4]);
+```
+
+#### Carry c

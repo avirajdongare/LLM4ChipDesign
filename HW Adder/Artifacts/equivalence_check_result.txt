@@ -1,0 +1,11 @@
+
+EQUIVALENCE CHECK RESULTS
+==========================
+Tool: Yosys 0.9 SAT solver
+Gold design: RCA8 (golden reference, behavioral)
+Gate design: best_adder_balanced (LLM-optimized, 30 cells)
+
+SAT Result: SUCCESS - no counterexample found
+Conclusion: FORMALLY EQUIVALENT
+
+The optimized design is proven correct across all 2^16 = 65,536 input combinations.

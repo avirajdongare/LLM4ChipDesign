@@ -1,0 +1,147 @@
+# Detailed Verification Report: CLA8 Adder Comparison
+
+## 1. Module Names
+**MATCH**
+
+Both designs contain identical module names:
+- `PGGen` - Propagate/Generate generator module
+- `CLA8` - 8-bit Carry Lookahead Adder top module
+
+## 2. Port Names and Widths
+**MATCH**
+
+### PGGen Module:
+| Port | Golden | Generated |
+|------|--------|-----------|
+| g | output (1-bit) | output (1-bit) |
+| p | output (1-bit) | output (1-bit) |
+| a | input (1-bit) | input (1-bit) |
+| b | input (1-bit) | input (1-bit) |
+
+### CLA8 Module:
+| Port | Golden | Generated |
+|------|--------|-----------|
+| sum | output [7:0] | output [7:0] |
+| cout | output (1-bit) | output (1-bit) |
+| a | input [7:0] | input [7:0] |
+| b | input [7:0] | input [7:0] |
+
+## 3. Internal Signal Declarations
+**MATCH**
+
+Both designs declare identical internal signals in CLA8:
+- `wire [7:0] g` - generate signals
+- `wire [7:0] p` - propagate signals
+- `wire [7:0] c` - carry signals
+- `wire [35:0] e` - intermediate AND terms
+- `wire cin` - carry input
+
+The Generated design uses separate declarations per signal type, while Golden combines them, but the net result is identical.
+
+## 4. Module Hierarchy and Submodule Instantiation
+**MATCH**
+
+Both designs use identical module hierarchy:
+- `CLA8` instantiates 8 instances of `PGGen` using array instantiation syntax
+- Instance name: `pggen[7:0]`
+- Port connections: `(g[7:0], p[7:0], a[7:0], b[7:0])`
+
+## 5. Gate-Level Logic Implementation
+**MATCH**
+
+### Carry Input Initialization:
+- Golden: `buf (cin, 0);`
+- Generated: `buf (cin, 1'b0);`
+
+Both initialize `cin` to 0. The `1'b0` is more explicit but functionally identical to `0`.
+
+### Generate/Propagate Logic (PGGen):
+Both use identical gates:
+- `and (g, a, b);`
+- `xor (p, a, b);`
+
+### Carry Chain Logic (c[0] through c[7]):
+All 36 AND gates (e[0] through e[35]) and all 8 OR gates for carries are identical in both designs, with the same input connections.
+
+### Sum Computation:
+- Golden uses array instantiation: `xor x[7:1](sum[7:1],p[7:1],c[6:0]);`
+- Generated uses individual gates:
+  ```verilog
+  xor (sum[1], p[1], c[0]);
+  xor (sum[2], p[2], c[1]);
+  // ... etc.
+  ```
+
+Both compute: `sum[0] = p[0] XOR cin` and `sum[i] = p[i] XOR c[i-1]` for i=1 to 7.
+
+### Carry Output:
+Both use: `buf (cout, c[7]);`
+
+## 6. Design Style (Structural vs Behavioral)
+**MATCH**
+
+Both designs are **purely structural/gate-level**:
+- Use primitive gate instantiations (and, or, xor, buf)
+- No behavioral constructs (always blocks, assign statements)
+- Hierarchical decomposition with PGGen submodule
+- No procedural code
+
+## 7. Functional Equivalence Assessment
+**MATCH**
+
+### Mathematical Analysis:
+
+**PGGen Module:**
+- Both compute: g = a AND b (generate)
+- Both compute: p = a XOR b (propagate)
+
+**Carry Lookahead Logic:**
+The CLA equations implemented are:
+- c[0] = g[0] + p[0]·cin
+- c[i] = g[i] + p[i]·c[i-1] expanded to:
+  - c[i] = g[i] + p[i]·g[i-1] + p[i]·p[i-1]·g[i-2] + ... + p[i]·p[i-1]·...·p[0]·cin
+
+Both designs implement identical lookahead equations for all 8 carry bits.
+
+**Sum Computation:**
+- sum[0] = p[0] XOR cin = a[0] XOR b[0] XOR 0 = a[0] XOR b[0]
+- sum[i] = p[i] XOR c[i-1] for i = 1 to 7
+
+**Carry Output:**
+- cout = c[7] (the final carry)
+
+Both designs compute: `{cout, sum[7:0]} = a[7:0] + b[7:0]`
+
+### Verification Summary Table:
+
+| Component | Golden | Generated | Status |
+|-----------|--------|-----------|--------|
+| cin init | 0 | 1'b0 | ✓ |
+| PGGen gates | and/xor | and/xor | ✓ |
+| e[0-35] AND gates | 36 gates | 36 gates | ✓ |
+| c[0-7] OR gates | 8 gates | 8 gates | ✓ |
+| sum[0] XOR | p[0]⊕cin | p[0]⊕cin | ✓ |
+| sum[1-7] XOR | array inst. | individual | ✓ |
+| cout buffer | c[7] | c[7] | ✓ |
+
+---
+
+# Overall Verdict: **FUNCTIONALLY EQUIVALENT**
+
+## Justification:
+
+The two implementations are **functionally equivalent** for the following reasons:
+
+1. **Identical module interfaces** - Same port names, directions, and widths
+2. **Identical internal signal structure** - Same wire declarations
+3. **Identical gate-level logic** - All primitive gates have the same connectivity
+4. **Identical submodule instantiation** - PGGen array instantiation is the same
+5. **Equivalent sum computation** - The array instantiation `xor x[7:1](sum[7:1],p[7:1],c[6:0])` in the Golden design is functionally identical to the seven individual XOR gate instantiations in the Generated design
+
+The only differences are cosmetic:
+- Formatting and whitespace
+- Use of `1'b0` vs `0` for the constant
+- Comments style
+- Array vs. individual gate instantiation for sum bits (both produce identical netlists)
+
+Both designs implement a correct 8-bit Carry Lookahead Adder with cin=0, producing `sum = a + b` and `cout` indicating overflow beyond 8 bits.

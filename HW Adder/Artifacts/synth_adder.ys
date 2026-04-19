@@ -1,0 +1,8 @@
+read_verilog $ADDER_FILE
+hierarchy -top $TOP_MODULE
+proc; opt; fsm; opt; memory; opt
+techmap; opt
+dfflibmap -liberty nangate45.lib
+abc -liberty nangate45.lib
+clean
+stat -liberty nangate45.lib

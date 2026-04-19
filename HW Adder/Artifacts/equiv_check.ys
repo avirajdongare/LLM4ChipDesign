@@ -1,0 +1,8 @@
+read_verilog RCA8_behav.v
+read_verilog best_adder_balanced.v
+proc
+techmap
+opt
+miter -equiv RCA8 adder8 miter
+flatten miter
+sat -verify -prove trigger 0 miter

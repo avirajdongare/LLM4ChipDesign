@@ -1,0 +1,28 @@
+
+SIMULATION RESULTS SUMMARY
+===========================
+
+RCA8: 24/24 tests passed
+CLA8: 24/24 tests passed
+
+KEY OBSERVATIONS:
+
+RCA8 Internal Signals:
+- Carry bits c[1]-c[7] ripple correctly stage by stage
+- Verified on edge cases: all zeros, all ones, overflow, alternating bits
+- Carry chain behaves exactly as expected for ripple architecture
+
+CLA8 Internal Signals:
+- g[7:0]: generate signals correctly compute a AND b per bit
+- p[7:0]: propagate signals correctly compute a XOR b per bit  
+- c[7:0]: all 8 carries computed in parallel, verified correct
+- e[35:0]: all 36 intermediate AND terms verified correct
+
+DIFFERENCES BETWEEN ARCHITECTURES (confirmed by simulation):
+- RCA: carries depend on previous stage (sequential dependency)
+- CLA: all carries available simultaneously (parallel computation)
+- Both produce identical sum and cout for all test vectors
+
+CONCLUSION:
+Both LLM-generated designs are functionally correct and match
+the golden reference designs in behavior.

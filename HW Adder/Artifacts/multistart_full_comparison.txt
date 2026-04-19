@@ -1,0 +1,6 @@
+Multi-Start Optimization Full Comparison
+RCA8 + area:     Cells=36, Area=44.156
+RCA8 + delay:    Cells=37, Area=44.954
+RCA8 + balanced: Cells=30, Area=38.57
+KSA8 + area:     Cells=37, Area=44.954
+CLA8 + delay:    Cells=35, Area=42.028

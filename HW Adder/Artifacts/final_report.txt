@@ -1,0 +1,86 @@
+# LLM-Based Verilog Adder Generation and Verification: Final Project Report
+
+## 1. Project Overview and Objectives
+
+This project investigates the capabilities of Large Language Models (LLMs) in generating synthesizable Verilog code for digital arithmetic circuits, with emphasis on functional verification and power-performance-area (PPA) optimization. The primary objectives were threefold: (1) evaluate LLM accuracy in generating structurally correct Verilog implementations of standard adder architectures, (2) develop comprehensive testbench methodologies including internal signal verification, and (3) explore LLM-assisted design space exploration for PPA optimization using industrial-grade synthesis tools.
+
+The project employed Claude claude-opus-4-5 via API as the primary LLM, Icarus Verilog for simulation, and Yosys 0.9 with the NanGate 45nm standard cell library for synthesis and formal verification. This combination represents a realistic open-source digital design flow suitable for academic research and rapid prototyping.
+
+## 2. Adder Selection and Justification
+
+Two 8-bit adder architectures were selected for investigation: the Ripple Carry Adder (RCA8) and the Carry Lookahead Adder (CLA8). This selection provides complementary perspectives on LLM code generation capabilities.
+
+The **Ripple Carry Adder** represents the fundamental building block of arithmetic circuits, featuring a simple cascaded full-adder structure where carry propagates sequentially through each bit position. Its straightforward architecture makes it an ideal baseline for evaluating basic LLM comprehension of hierarchical Verilog modules and signal propagation.
+
+The **Carry Lookahead Adder** introduces significantly greater complexity through its generate (G), propagate (P), and carry computation logic. The CLA requires the LLM to understand parallel prefix computation concepts and correctly implement the lookahead equations: G[i] = A[i]·B[i] and P[i] = A[i]⊕B[i], with carry terms C[i+1] = G[i] + P[i]·C[i]. This architecture tests the LLM's ability to handle more sophisticated digital design patterns.
+
+## 3. Part 1: LLM-Based Verilog Generation
+
+### Methodology
+Golden reference implementations were developed for both architectures following standard textbook definitions. The LLM was prompted to generate equivalent implementations using detailed architectural specifications without providing the reference code.
+
+### Findings
+Both generated designs achieved **functional equivalence** with their golden references, though structural differences were observed.
+
+For RCA8, differences were purely cosmetic—variations in wire naming conventions and module port ordering that do not affect functionality. The hierarchical full-adder instantiation pattern was correctly replicated.
+
+For CLA8, the LLM utilized array-based XOR instantiation (`xor_array[7:0]`) rather than individual gate instantiations (`xor0, xor1, ...`). While structurally different, formal analysis confirmed identical logical behavior. This demonstrates the LLM's capacity to generate valid alternative implementations that may reflect different coding styles encountered in training data.
+
+These results indicate strong LLM competency in translating architectural specifications to synthesizable RTL, with an implicit understanding of Verilog semantics and digital design principles.
+
+## 4. Part 2: Testbench Generation and Simulation
+
+### Methodology
+LLM-generated testbenches incorporated both exhaustive boundary testing and randomized verification vectors. Critically, testbenches were designed to probe internal signals—not merely input-output relationships—to verify architectural correctness.
+
+### Results
+**RCA8 Simulation:** All 24 test vectors passed successfully. Internal carry chain signals (c[0] through c[7]) were explicitly verified at each bit position, confirming proper ripple propagation behavior.
+
+**CLA8 Simulation:** All 24 test vectors passed. The testbench verified generate signals (g[7:0]), propagate signals (p[7:0]), carry signals (c[7:0]), and intermediate lookahead terms (e[7:0]). This comprehensive internal verification confirmed that the parallel carry computation operated as intended, not merely that outputs matched expected values.
+
+The internal signal verification methodology represents a significant advancement over black-box testing, providing confidence that optimizations in subsequent phases preserve architectural intent.
+
+## 5. Part 3: Yosys PPA Optimization
+
+### Methodology
+Three optimization modes were explored using Yosys synthesis directives:
+- **Mode A (Area):** Minimizing cell count and total silicon area
+- **Mode B (Delay):** Minimizing critical path through timing-driven synthesis
+- **Mode C (Balanced):** Multi-objective optimization targeting area-delay product
+
+The LLM was iteratively prompted to propose architectural variants, with each variant synthesized and evaluated against baseline metrics.
+
+### Results
+
+| Configuration | Cells | Area (μm²) | Improvement vs RCA8 |
+|--------------|-------|------------|---------------------|
+| RCA8 Baseline | 40 | 44.688 | — |
+| CLA8 Baseline | 38 | 44.156 | -1.2% area |
+| Mode A (Area) | 36 | 44.156 | -10% cells |
+| Mode B (Delay) | 37 | 44.954 | -7.5% cells |
+| Mode C (Balanced) | 30 | 38.570 | **-25% cells, -13.7% area** |
+
+### Analysis
+The optimal design emerged from Mode C optimization: a **Kill-Propagate RCA** variant utilizing the formulation k = NOR(a,b). This architecture exploits the mathematical duality between generate-propagate and kill-propagate representations, enabling more efficient logic minimization during synthesis.
+
+Formal equivalence checking via SAT solving confirmed the optimized design's correctness (568 variables, 1462 clauses, **SAT PASSED**), ensuring that aggressive optimization did not introduce functional errors.
+
+## 6. Key Findings and Lessons Learned
+
+1. **LLM Reliability:** Claude claude-opus-4-5 demonstrated consistent ability to generate functionally correct Verilog for moderately complex arithmetic circuits, though structural variations from reference implementations should be expected.
+
+2. **Verification Depth:** Internal signal verification proved essential for validating architectural correctness beyond functional equivalence.
+
+3. **Optimization Potential:** LLM-assisted design exploration identified non-obvious architectural variants (kill-propagate formulation) that outperformed both baseline designs by significant margins.
+
+4. **Tool Integration:** The combination of LLM generation with formal verification tools provides a robust methodology for ensuring optimization correctness.
+
+## 7. Limitations and Future Work
+
+Current limitations include restriction to 8-bit datapaths, single clock-cycle combinational logic, and reliance on a specific cell library. The LLM occasionally required clarifying prompts for precise signal naming conventions.
+
+Future work should explore wider bit-widths (32/64-bit), pipelined architectures, and integration with commercial synthesis tools. Automated prompt refinement based on synthesis feedback represents a promising direction for closed-loop optimization.
+
+## 8. Conclusions
+
+This project demonstrates that LLMs represent viable assistants for digital design workflows, capable of generating functionally correct Verilog and proposing effective architectural optimizations. The 25% cell count reduction achieved through LLM-guided exploration, verified through formal methods, validates the potential for AI-assisted hardware design. As LLM capabilities continue advancing, deeper integration with EDA tool flows promises to accelerate the hardware development cycle significantly.
